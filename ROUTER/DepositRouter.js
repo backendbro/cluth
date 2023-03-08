@@ -4,8 +4,8 @@ const {protect, auth} = require('../MIDDLEWARES/protect')
 
 router.use(protect)
 
-router.get('/', DepositService.getDeposits) 
+router.post('/get-all', DepositService.getDeposits) 
 router.post("/",  auth("Admin"), DepositService.makeDeposit)
-router.get('/single-deposit', DepositService.getSingleDeposit)
-router.get('/user-deposit', DepositService.getUserDeposit)
+router.post('/single-deposit', DepositService.getSingleDeposit)
+router.post('/user-deposit', DepositService.getUserDeposit)
 module.exports = router
