@@ -81,6 +81,10 @@ class UserService {
     }
 
 
+    async getUser(req,res) {
+        res.status(200).json({user: req.user})
+    }
+
     async forgotPassword (req,res) {
         const {email} = req.body 
         const user = await UserSchema.findOne({email})

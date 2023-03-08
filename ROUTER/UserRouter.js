@@ -11,7 +11,7 @@ router.put('/resend-pin', UserService.resendConfirmPin)
 router.post('/forgot-password', UserService.forgotPassword)
 router.put('/reset-password', UserService.resetPassword)
 router.put('/reset-current-password', protect, UserService.resetCurrentPassword)
-
+router.get('/logged-in-user', protect, UserService.getUser)
 
 
 
