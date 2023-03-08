@@ -5,14 +5,14 @@ const sendEmail = require('../ULTIS/email')
 class UserService {
 
     async register(req,res) {
-        const {email, username, password} = req.body 
+        const {email, username, password, phoneNumber} = req.body 
         let user = await UserSchema.findOne({email})
         
         if(user){
             return res.status(404).json({message:"USER ALREADY EXIST"})
         }
 
-        user = await UserSchema.create({email, username, password})
+        user = await UserSchema.create({email, username, password, phoneNumber})
         
         const token = user.createToken()
         const pin = user.send2FACode()
