@@ -7,5 +7,5 @@ router.use(protect)
 router.get('/', DepositService.getDeposits) 
 router.post("/",  auth("Admin"), DepositService.makeDeposit)
 router.get('/single-deposit', DepositService.getSingleDeposit)
-
+router.get('/user-deposit', DepositService.getUserDeposit)
 module.exports = router

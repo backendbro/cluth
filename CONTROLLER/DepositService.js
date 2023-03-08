@@ -61,7 +61,14 @@ class DepositService {
         res.status(200).json(deposit)
     }
 
-  
+  async getUserDeposit(req,res) {
+    const {userId} = req.body 
+    const deposits = await DepositSchema.find({user:userId})
+    if(!deposits){
+        return res.status(404).json("NO DEPOSITS FOUND")
+    }
+    res.status(200).json(deposits)
+  }
 }
 
 module.exports = new DepositService
