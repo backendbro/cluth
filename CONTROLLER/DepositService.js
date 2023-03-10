@@ -64,8 +64,7 @@ class DepositService {
 
   async getUserDeposit(req,res) {
     const {userId} = req.body 
-    const Id = mongoose.Types.ObjectId(userId);
-    const deposits = await DepositSchema.find({user:Id})
+    const deposits = await DepositSchema.find({user:userId})
     if(!deposits){
         return res.status(404).json("NO DEPOSITS FOUND")
     }
@@ -74,13 +73,7 @@ class DepositService {
 
   async deleteDeposit(req,res) {
     const {depositId} = req.body 
-    const Id = mongoose.Types.ObjectId(depositId);
-
-    let deposits = await DepositSchema.find({_id:Id})
-    if(!deposits){
-        return res.status(404).json("NO DEPOSITS FOUND")
-    }
-    await DepositSchema.findOneAndRemove({_id:Id})
+    await DepositSchema.findOneAndRemove({_id:depositId})
     res.status(200).json({message:"DEPOSIT DELETED"})
   }
 }

@@ -9,4 +9,5 @@ router.post("/",  auth("Admin"), DepositService.makeDeposit)
 router.post('/single-deposit', DepositService.getSingleDeposit)
 router.post('/user-deposit', DepositService.getUserDeposit)
 router.delete('/delete-deposit', DepositService.deleteDeposit)
+
 module.exports = router
