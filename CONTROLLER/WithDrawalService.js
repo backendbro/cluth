@@ -34,9 +34,7 @@ class WithDrawalService {
     async getWithDrawalRequestsForOneUser(req,res) {
         
         const {userId} = req.body
-        const Id = mongoose.Types.ObjectId(userId);
-        
-        const withDrawalRequests = await WithDrawalSchema.find({user:Id})
+        const withDrawalRequests = await WithDrawalSchema.find({user:userId})
         if(!withDrawalRequests){
             return res.status(404).json("THIS USER DOES NOT ANY WITHDRAWAL REQUESTS YET")
         }

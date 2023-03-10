@@ -7,6 +7,7 @@ router.use(protect)
 router.post('/get-all', DepositService.getDeposits) 
 router.post("/",  auth("Admin"), DepositService.makeDeposit)
 router.post('/single-deposit', DepositService.getSingleDeposit)
+
 router.post('/user-deposit', DepositService.getUserDeposit)
 router.delete('/delete-deposit', DepositService.deleteDeposit)
 
