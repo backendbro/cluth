@@ -6,7 +6,7 @@ router.use(protect)
 
 router.post('/request', auth("User"),WithDrawalService.withDrawalRequest)
 router.get('/', WithDrawalService.getWithDrawalRequests)
-router.get('/single-user', WithDrawalService.getWithDrawalRequestsForOneUser)
+router.post('/single-user', WithDrawalService.getWithDrawalRequestsForOneUser)
 router.get('/single-withdraw', auth("Admin"), WithDrawalService.getSingleWithDrawalRequests)
 router.put('/confirm-withdraw', auth("Admin"), WithDrawalService.confirmWithDrawalRequest)
 
