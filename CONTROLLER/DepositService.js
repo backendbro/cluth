@@ -63,7 +63,8 @@ class DepositService {
 
   async getUserDeposit(req,res) {
     const {userId} = req.body 
-    const deposits = await DepositSchema.find({user:userId})
+    const Id = mongoose.Types.ObjectId(userId);
+    const deposits = await DepositSchema.find({user:Id})
     if(!deposits){
         return res.status(404).json("NO DEPOSITS FOUND")
     }
