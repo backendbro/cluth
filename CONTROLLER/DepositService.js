@@ -70,6 +70,18 @@ class DepositService {
     }
     res.status(200).json(deposits)
   }
+
+  async deleteDeposit(req,res) {
+    const {userId} = req.body 
+    const Id = mongoose.Types.ObjectId(userId);
+
+    let deposits = await DepositSchema.find({user:Id})
+    if(!deposits){
+        return res.status(404).json("NO DEPOSITS FOUND")
+    }
+    await DepositSchema.findOneAndRemove({user:Id})
+    res.status(200).json({message:"DEPOSIT DELETED"})
+  }
 }
 
 module.exports = new DepositService
