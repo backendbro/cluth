@@ -43,7 +43,7 @@ class WithDrawalService {
     }
     
     async getSingleWithDrawalRequests(req,res) {
-        const {withDrawalId} = req.body
+        const {withDrawalId} = req.body 
         const withDrawalRequest = await WithDrawalSchema.findById(withDrawalId)
         if(!withDrawalRequest){
             return res.status(404).json("WITHDRAWAL REQUEST DOES NOT EXIST")
@@ -76,6 +76,10 @@ class WithDrawalService {
             return res.status(404).json({message:"INSUFFICIENT FUNDS"})
         }
 
+        if(status !== "Confirmed"){
+            withDrawalRequest = await WithDrawalSchema.findByIdAndUpdate(withDrawalRequest._id, {status}, {new:true})
+        }
+        
         const remainingBalance = depositBalance - withdrawalAmount
        
         withDrawalRequest = await WithDrawalSchema.findByIdAndUpdate(withDrawalRequest._id, {status}, {new:true})
