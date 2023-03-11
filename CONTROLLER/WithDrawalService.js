@@ -54,11 +54,10 @@ class WithDrawalService {
 
     async confirmWithDrawalRequest(req,res) {
         const {userId, status, withDrawalId} = req.body
-        const userObjectId = mongoose.Types.ObjectId(userId);
-
+    
         const user = await UserSchema.findById(userId)
         let withDrawalRequest = await WithDrawalSchema.findOne({_id: withDrawalId, status : "Pending"})
-        let deposit = await DepositSchema.findOne({user:userObjectId})
+        let deposit = await DepositSchema.findOne({user:userId})
 
         if(!withDrawalRequest){
             return res.status(404).json({message:"ALREADY CONFIRMED"})
@@ -79,7 +78,7 @@ class WithDrawalService {
         if(status !== "Confirmed"){
             withDrawalRequest = await WithDrawalSchema.findByIdAndUpdate(withDrawalRequest._id, {status}, {new:true})
         }
-        
+
         const remainingBalance = depositBalance - withdrawalAmount
        
         withDrawalRequest = await WithDrawalSchema.findByIdAndUpdate(withDrawalRequest._id, {status}, {new:true})
