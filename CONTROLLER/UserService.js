@@ -1,5 +1,5 @@
 const UserSchema = require('../MODEL/UserSchema')
-const mongoose = require('mongoose')
+const AmountDepositedSchema = require('../MODEL/AmountDeposited')
 const sendEmail = require('../ULTIS/email')
 
 class UserService {
@@ -13,7 +13,9 @@ class UserService {
         }
 
         user = await UserSchema.create({email, username, password, phoneNumber})
-        
+        const obj = {user:user._id}
+        await AmountDepositedSchema.create(obj)
+       
         const token = user.createToken()
         const pin = user.send2FACode()
         await user.save()

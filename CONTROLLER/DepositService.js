@@ -1,7 +1,7 @@
 const DepositSchema = require('../MODEL/DepositSchema')
 const UserSchema = require('../MODEL/UserSchema')
 const WithDrawalSchema = require('../MODEL/WithDrawalSchema')
-const mongoose = require('mongoose')
+const AmountDepositedSchema = require('../MODEL/AmountDeposited')
 
 class DepositService {
     
@@ -51,6 +51,27 @@ class DepositService {
         await DepositSchema.findByIdAndUpdate(deposit.id, {balance:newBalance}, {new:true})
 
         res.status(201).json({deposit})
+    }
+
+    async makeDepositV2 (req,res){
+        const {amount, userId} = req.body 
+        const user = await UserSchema.findById(userId)
+        
+    
+            let balance=parseInt(amount)
+            findAmountDeposit.amount.forEach(amount => {
+                balance = balance + parseInt(amount)
+            })
+
+            const newAmountDeposit = await AmountDepositedSchema.
+            findByIdAndUpdate(findAmountDeposit.id, 
+                {$push:{amount}, balance},
+                 {new:true})
+
+
+            const deposit = await DepositSchema.create({amount, userId})
+
+            res.status(200).json({message:"DEPOSIT MADE", deposit, newAmountDeposit}) 
     }
 
     async getSingleDeposit(req,res) {

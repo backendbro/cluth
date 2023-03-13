@@ -1,10 +1,15 @@
 const {Schema, model} = require('mongoose')
 
 const DepositSchema = Schema({
-    amount:{type:Array},
-    balance:{type:Number, default:0},
-    user:{ type: Schema.Types.ObjectId, ref:'User'},
-    status:{type:String, default:"Confirmed"}
+    amount:{
+        type:Number,
+        required:true
+    },
+    status:{
+        type:String,
+        default:'Pending'
+    },
+    user:{ type: Schema.Types.ObjectId, ref:"User" }
 }, {timestamps:true})
 
 
