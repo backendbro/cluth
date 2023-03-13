@@ -3,6 +3,7 @@ const UserSchema = require('../MODEL/UserSchema')
 const WithDrawalSchema = require('../MODEL/WithDrawalSchema')
 const DepositSchema = require('../MODEL/DepositSchema')
 const mongoose = require("mongoose")
+const AmountDeposited = require('../MODEL/AmountDeposited')
 
 
 class WithDrawalService {
@@ -55,36 +56,34 @@ class WithDrawalService {
     async confirmWithDrawalRequest(req,res) {
         const {userId, status, withDrawalId} = req.body
     
-        const user = await UserSchema.findById(userId)
         let withDrawalRequest = await WithDrawalSchema.findOne({_id: withDrawalId, status : "Pending"})
-        let deposit = await DepositSchema.findOne({user:userId})
+        let amountPaid = await AmountDeposited.findOne({user:userId})
+
+        if(status !== "Confirmed"){
+            const failedRequest = await WithDrawalSchema.findByIdAndUpdate(withDrawalRequest._id, {status}, {new:true})
+            return res.status(404).json({failedRequest})
+        }
 
         if(!withDrawalRequest){
             return res.status(404).json({message:"ALREADY CONFIRMED"})
         }
-        
-        if(!deposit){
-            return res.status(404).json({message:"NO DEPOSIT YET!"})
-        }
+      
 
         const withdrawalAmount = withDrawalRequest.amount 
-        const depositBalance = deposit.balance
+        const amountPaidBalance = amountPaid.balance
 
             
-        if(withdrawalAmount > depositBalance ){
+        if(withdrawalAmount > amountPaidBalance ){
             return res.status(404).json({message:"INSUFFICIENT FUNDS"})
         }
 
-        if(status !== "Confirmed"){
-            withDrawalRequest = await WithDrawalSchema.findByIdAndUpdate(withDrawalRequest._id, {status}, {new:true})
-        }
 
-        const remainingBalance = depositBalance - withdrawalAmount
+        const remainingBalance = amountPaidBalance - withdrawalAmount
        
         withDrawalRequest = await WithDrawalSchema.findByIdAndUpdate(withDrawalRequest._id, {status}, {new:true})
-        deposit = await DepositSchema.findByIdAndUpdate(deposit._id, {balance: remainingBalance}, {new:true})
+        amountPaid = await AmountDeposited.findByIdAndUpdate(amountPaid._id, {balance: remainingBalance}, {new:true})
 
-        res.status(200).json({withDrawalRequest, deposit})
+        res.status(200).json({withDrawalRequest, amountPaid})
     
     } 
 }

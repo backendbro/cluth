@@ -12,56 +12,17 @@ class DepositService {
         }
         res.status(200).json(deposits)
     }
-
-    async  makeDeposit(req,res) {
-       
-        const {amt, userId} = req.body 
-        const user = await UserSchema.findById(userId)
-        const amount = parseInt(amt)
-        
-        const depositObj = {amount, user:userId}
-
-        const findDepositLedger = await DepositSchema.findOne({user})
-        const findConfirmedWithDrawal = await WithDrawalSchema.find({status:"Confirmed"})
-
-
-        if(findDepositLedger){
-            
-            let confirmedAmt = 0;
-            let balance = amount
-
-            findDepositLedger.amount.forEach(amount => {
-                balance = balance + amount
-            })
-
-            if(findConfirmedWithDrawal){
-                findConfirmedWithDrawal.forEach(confirmed => {
-                    confirmedAmt = confirmed.amount + confirmedAmt
-                })
-            }
-
-            balance = balance - confirmedAmt
-           
-            const newDeposit = await DepositSchema.findByIdAndUpdate(findDepositLedger.id, {$push:{amount}, balance}, {new:true})
-            return res.status(200).json({newDeposit})
-        }
-
-        const deposit = await DepositSchema.create(depositObj)
-        const newBalance = amount
-        await DepositSchema.findByIdAndUpdate(deposit.id, {balance:newBalance}, {new:true})
-
-        res.status(201).json({deposit})
-    }
+   
 
     async makeDepositV2 (req,res){
         const {amount, userId} = req.body 
         const user = await UserSchema.findById(userId)
         
-    
-            let balance=parseInt(amount)
-            findAmountDeposit.amount.forEach(amount => {
-                balance = balance + parseInt(amount)
-            })
+        let findAmountDeposit = await AmountDepositedSchema.findOne({user})
+        if(!findAmountDeposit){
+            return res.status(404).json({message:"NO TRANSACTION LEDGER FOUND!"})
+        }
+        const balance = findAmountDeposit.balance + amount
 
             const newAmountDeposit = await AmountDepositedSchema.
             findByIdAndUpdate(findAmountDeposit.id, 
@@ -71,7 +32,7 @@ class DepositService {
 
             const deposit = await DepositSchema.create({amount, userId})
 
-            res.status(200).json({message:"DEPOSIT MADE", deposit, newAmountDeposit}) 
+        res.status(200).json({message:"DEPOSIT MADE", deposit, newAmountDeposit}) 
     }
 
     async getSingleDeposit(req,res) {
@@ -97,6 +58,7 @@ class DepositService {
     await DepositSchema.findOneAndRemove({_id:depositId})
     res.status(200).json({message:"DEPOSIT DELETED"})
   }
+  
 }
 
 module.exports = new DepositService

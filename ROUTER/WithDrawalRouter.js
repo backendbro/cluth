@@ -5,7 +5,7 @@ const {protect, auth } = require('../MIDDLEWARES/protect')
 router.use(protect)
 
 router.post('/request', auth("User"),WithDrawalService.withDrawalRequest)
-router.post('/', WithDrawalService.getWithDrawalRequests)
+router.get('/', WithDrawalService.getWithDrawalRequests)
 router.post('/single-user', WithDrawalService.getWithDrawalRequestsForOneUser)
 router.post('/single-withdraw', auth("Admin"), WithDrawalService.getSingleWithDrawalRequests)
 router.put('/confirm-withdraw', auth("Admin"), WithDrawalService.confirmWithDrawalRequest)
