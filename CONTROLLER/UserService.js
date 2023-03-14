@@ -17,6 +17,7 @@ class UserService {
         await AmountDepositedSchema.create(obj)
        
 
+        const pin = user.send2FACode()
         await user.save()
 
         sendEmail(email, "Domicion Verification Code", {username, pin, request:"Verification of Email"})
@@ -72,7 +73,7 @@ class UserService {
             return res.status(404).json({message:"EMAIL DOES NOT EXIST"})
         }
 
-        if(!user.isVerifiedAcct !== "true") {
+        if(user.isVerifiedAcct !== true) {
             return res.status(404).json({message:"VERIFY YOUR ACCT"})
         }
 
