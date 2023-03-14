@@ -22,7 +22,7 @@ class UserService {
 
         sendEmail(email, "Domicion Verification Code", {username, pin, request:"Verification of Email"})
        
-        res.status(202).json({message:"VERIFY EMAIL"})
+        res.status(202).json({message:"VERIFY EMAIL", user})
     }
 
 
