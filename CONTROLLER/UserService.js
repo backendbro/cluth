@@ -16,13 +16,12 @@ class UserService {
         const obj = {user:user._id}
         await AmountDepositedSchema.create(obj)
        
-        const token = user.createToken()
-        const pin = user.send2FACode()
+
         await user.save()
 
         sendEmail(email, "Domicion Verification Code", {username, pin, request:"Verification of Email"})
        
-        res.status(202).json({user, token})
+        res.status(202).json({message:"VERIFY EMAIL"})
     }
 
 
@@ -72,6 +71,11 @@ class UserService {
         if(!user){
             return res.status(404).json({message:"EMAIL DOES NOT EXIST"})
         }
+
+        if(!user.isVerifiedAcct !== "true") {
+            return res.status(404).json({message:"VERIFY YOUR ACCT"})
+        }
+
 
         const matchPassword = await user.comparePassword(password, user.password)
         if(!matchPassword){
